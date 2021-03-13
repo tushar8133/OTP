@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script type="text/javascript">
+
+		let counter = 0;
+		function generateSecret() {
+			counter = 0;
+			let incorrectSecret = document.querySelector('#incorrectSecret').value;
+			let passphrase = document.querySelector('#passphrase').value;
+			let reverseChar = "";
+		    let correctSecret = incorrectSecret.split('').map(char=>{
+
+		        let charTypeStartPos = 0;
+		        let charTypeEndPos = 0;
+
+		        if (/[A-Z]/.test(char)) {
+		            charTypeStartPos = 65;
+		        	charTypeEndPos = 90;
+		        } else if (/[a-z]/.test(char)) {
+		            charTypeStartPos = 97;
+		        	charTypeEndPos = 122;
+		        } else {
+		        	reverseChar += char;
+		            return char;
+		        }
+
+		        let currCharNum = char.charCodeAt();
+		        let shiftCharNum = (( (currCharNum - charTypeStartPos) + nextPassCharAdjuster()) % 26);
+		        let newCharNum = charTypeStartPos + shiftCharNum;
+		        reverseChar += String.fromCharCode(1 + charTypeEndPos - shiftCharNum);
+		        return String.fromCharCode(newCharNum);
+
+		    }).join('');
+		    document.querySelector('#correctSecret').value = correctSecret;
+		    document.querySelector('#reverseSecret').value = reverseChar;
+		}
+
+		function nextPassCharAdjuster() {
+			let passphrase = document.querySelector('#passphrase').value;
+		    let currCharNum = passphrase.toLowerCase().charCodeAt(counter) - 96;
+		    counter++;
+		    if (counter === passphrase.length)
+		        counter = 0;
+		    return currCharNum;
+		}
+
+		setTimeout(generateSecret, 500)
+	</script>
+</head>
+<body>
+
+<input type="text" oninput="generateSecret()" placeholder="incorrectSecret" id="incorrectSecret" value="AAAAAAAA"><br>
+<input type="text" oninput="generateSecret()" placeholder="passphrase" id="passphrase" value="aaaa"><br>
+<input type="text" placeholder="correctSecret" id="correctSecret"><br>
+<input type="text" placeholder="reverse" id="reverseSecret">
+<p>BCDEBCDE</p>
+</body>
+</html>
