@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>OTP|MFA|2SV</title>
+	<title>OTP</title>
 	<!-- <meta http-equiv="refresh" content="30"/> -->
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -53,7 +53,7 @@
 			<div class="col-sm">
 				<hr>
 				<div>Passphrase</div>
-				<input type="password" id="passphrase" oninput="processPassphrase()" style="text-align: center;" title="yato" />
+				<input type="password" id="passphrase" style="text-align: center;" title="yato" />
 				<hr>
 			</div>
 		</div>
@@ -183,13 +183,10 @@
 				let time = (30 - Math.round(new Date() / 1000) % 30);
 				document.querySelector("#epoch").innerText = time;
 				document.querySelector("#progressbar").value = time;
-				if(time == 30) {
-					processPassphrase();
-				}
+				processPassphrase();
 			}, 1000)
 		}
 
-		processPassphrase();
 		epoch();
 
 	</script>
