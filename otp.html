@@ -15,9 +15,8 @@
 		button {
 			margin: 5px;
 			transition: background 0.8s;
-			height: 35px;
-			width: 100px;
 			border: 1px solid lightgray;
+			padding: 3px 20px;
 		}
 		button:active {
 			background-color: deepskyblue;
@@ -26,6 +25,21 @@
 		}
 		button:focus {
 			outline: none;
+		}
+		.pannel > button {
+			color: #999999;
+			font-size: 70%;
+		}
+		.pannel > button span {
+			display: block;
+			padding: 0;
+			margin: 0;
+			height: auto;
+			width: auto;
+		}
+		.pannel > button > span:last-child {
+			color: #333333;
+			font-size: 130%;
 		}
 		.company {
 			display: inline-block;
@@ -60,26 +74,19 @@
 		</div>
 		<div class="row text-center">
 			<div class="col-sm">
-				<div><span id="epoch"></span> seconds remaining</div>
+				<div><span id="epoch"></span>&nbsp;seconds remaining</div>
 				<progress id="progressbar" max="30"></progress>
 			</div>
 		</div>
 	 	<div class="row text-center my-4">
 			<div class="col-sm">
-				<table border="0" align="center" width="80%">
-					<tr>
-						<td style="width: 25%;"></td>
-						<td style="width: 25%;"></td>
-						<td style="width: 25%;"></td>
-						<td style="width: 25%;"></td>
-					</tr>
-					<tr>
-						<td><span class="company">A</span><button onclick="copyToClipBoard(this.id)" id="AA"></button></td>
-						<td><span class="company">G</span><button onclick="copyToClipBoard(this.id)" id="GG"></button></td>
-						<td><span class="company">H</span><button onclick="copyToClipBoard(this.id)" id="HH"></button></td>
-						<td><span class="company">W</span><button onclick="copyToClipBoard(this.id)" id="WW"></button></td>
-					</tr>
-				</table>
+				<div class="pannel">
+					<td><button id="AZ" onclick="copyToClipBoard(this.id)"><span>AZ</span><span>XXXXXX</span></button></td>
+					<td><button id="GT" onclick="copyToClipBoard(this.id)"><span>GT</span><span>XXXXXX</span></button></td>
+					<td><button id="GO" onclick="copyToClipBoard(this.id)"><span>GO</span><span>XXXXXX</span></button></td>
+					<td><button id="HL" onclick="copyToClipBoard(this.id)"><span>HL</span><span>XXXXXX</span></button></td>
+					<td><button id="WU" onclick="copyToClipBoard(this.id)"><span>WU</span><span>XXXXXX</span></button></td>
+				</div>
 			</div>
 		</div>
  		<hr>
@@ -143,18 +150,19 @@
 
 		function processPassphrase() {
 			const otpsObj = {
-				AA: "U2FsdGVkX198PGHwy5U98RsVTJNRZePB1bmuWleatZHxM3xdAiSkuNQ2N1R8KwNFB/25rYHNrd1vnd8ubZVTSIDcHo7ulBP0Vt+JhZfe6sU=",
-				GG: "U2FsdGVkX1+mysPRzHdzjoHW2tJAJSSgeFEWJrlh0Z1jkDoG5GM4jrFORPo6ud6vmWVaatm+VI+ZOfBr6BRXOA==",
-				HH: "U2FsdGVkX1+hY+U2HdT+jgDezD9gYDYGy815VvjS08l2otcEEvqp8S7I5L7g0nAW",
-				WW: "U2FsdGVkX19qmB+neh7zGcmaVVnmv2kM8jWbUFrhZYSaeplil+xcle3aIcBJfFdX",
+				AZ: "U2FsdGVkX198PGHwy5U98RsVTJNRZePB1bmuWleatZHxM3xdAiSkuNQ2N1R8KwNFB/25rYHNrd1vnd8ubZVTSIDcHo7ulBP0Vt+JhZfe6sU=",
+				GT: "U2FsdGVkX1/YSlcGrWJyt3xEJTfuU3fdw8ep23yVFQlQ/7py5V5wCfteZBpLX1N5",
+				GO: "U2FsdGVkX1+mysPRzHdzjoHW2tJAJSSgeFEWJrlh0Z1jkDoG5GM4jrFORPo6ud6vmWVaatm+VI+ZOfBr6BRXOA==",
+				HL: "U2FsdGVkX1+hY+U2HdT+jgDezD9gYDYGy815VvjS08l2otcEEvqp8S7I5L7g0nAW",
+				WU: "U2FsdGVkX19qmB+neh7zGcmaVVnmv2kM8jWbUFrhZYSaeplil+xcle3aIcBJfFdX",
 			}
 			Object.keys(otpsObj).forEach( (key) => {
 				try {
 					let kkkey = String(otpsObj[key]);
 					let realSecret = CryptoJS[cipher].decrypt(kkkey, document.querySelector("#passphrase").value || "mock").toString(CryptoJS.enc.Utf8);
 					let paddedSecret = padMultipleOfEight(realSecret);
-					let otp = (paddedSecret)? totp.getOtp(paddedSecret) : "!";
-					document.querySelector("#"+key).innerText = otp;
+					let otp = (paddedSecret)? totp.getOtp(paddedSecret) : "XXXXXX";
+					document.querySelector(`#${key} > span:last-child`).textContent = otp;
 				} catch(e) {
 					console.log(e);
 				}
@@ -172,7 +180,8 @@
 		}
 
 		function copyToClipBoard(e) {
-			navigator.clipboard.writeText(document.querySelector("#"+e).firstChild.textContent);
+			let otpValue = document.querySelector(`#${e} > span:last-child`).textContent;
+			navigator.clipboard.writeText(otpValue);
 		}
 
 		function focusPassphrase() {
